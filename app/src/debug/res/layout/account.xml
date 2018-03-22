@@ -11,15 +11,6 @@
         android:scaleType="centerCrop"
         android:src="@drawable/ic_android"/>
 
-    <Button
-        android:id="@+id/sign_out"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="17dp"
-        android:background="@drawable/white_onclick_grey"
-        android:text="Sign out" />
 
     <TextView
         android:id="@+id/textView2"
@@ -45,9 +36,9 @@
         android:id="@+id/add_business"
         android:layout_width="300dp"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/textView3"
+        android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="17dp"
+        android:layout_marginBottom="48dp"
         android:background="@drawable/white_onclick_grey"
         android:text="Add Business" />
 

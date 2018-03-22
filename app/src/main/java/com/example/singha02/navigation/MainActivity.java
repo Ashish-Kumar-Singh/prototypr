@@ -2,12 +2,14 @@ package com.example.singha02.navigation;
 
 import android.*;
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
@@ -20,12 +22,18 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
+
+import com.example.singha02.navigation.accounts.LoginActivity;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     private static final int REQUEST_CODE = 1;
     private String TAG;
+    private FirebaseAuth.AuthStateListener mauthStateListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,6 +41,7 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle("Nexum");
 
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -43,6 +52,17 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+        setupFirebaseListener();
+        showMapFirst();
+    }
+
+    void showMapFirst(){
+
+        Fragment f = new search();
+        FragmentManager manager = getSupportFragmentManager();
+        manager.beginTransaction().replace(R.id.viewpager_container,f).commit();
+
+
     }
 
     @Override
@@ -71,11 +91,45 @@ public class MainActivity extends AppCompatActivity
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
-            return true;
+            Log.d(TAG,"Attempting to sign out User");
+            FirebaseAuth.getInstance().signOut();
         }
 
         return super.onOptionsItemSelected(item);
     }
+
+    private void setupFirebaseListener(){
+        Log.d(TAG,"Setting up the auth state listener");
+        mauthStateListener= new FirebaseAuth.AuthStateListener() {
+            @Override
+            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                FirebaseUser user= firebaseAuth.getCurrentUser();
+                if(user != null){
+                    Log.d(TAG,"signed_in"+user.getUid());
+                }else{
+                    Log.d(TAG,"onAuthstateChanged: signed_out");
+                    Toast.makeText(MainActivity.this,"Signed out",Toast.LENGTH_SHORT).show();
+                    Intent intent= new Intent(MainActivity.this, LoginActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    startActivity(intent);
+                }
+            }
+        };
+    }
+    @Override
+    public void onStart() {
+        super.onStart();
+        FirebaseAuth.getInstance().addAuthStateListener(mauthStateListener);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        if(mauthStateListener != null){
+            FirebaseAuth.getInstance().removeAuthStateListener(mauthStateListener);
+        }
+    }
+
 
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
@@ -119,27 +173,27 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
     //might get errors
-    private void verifyPermissions(){
-        Log.d(TAG, "verifyPermissions: asking user for permissions");
-        String[] permissions = {android.Manifest.permission.READ_EXTERNAL_STORAGE,
-                android.Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                Manifest.permission.CAMERA};
-
-        if(ContextCompat.checkSelfPermission(this.getApplicationContext(),
-                permissions[0]) == PackageManager.PERMISSION_GRANTED
-                && ContextCompat.checkSelfPermission(this.getApplicationContext(),
-                permissions[1]) == PackageManager.PERMISSION_GRANTED
-                && ContextCompat.checkSelfPermission(this.getApplicationContext(),
-                permissions[2]) == PackageManager.PERMISSION_GRANTED){
-
-        }else{
-            ActivityCompat.requestPermissions(MainActivity.this,
-                    permissions,
-                    REQUEST_CODE);
-        }
-    }
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        verifyPermissions();
-    }
+//    private void verifyPermissions(){
+//        Log.d(TAG, "verifyPermissions: asking user for permissions");
+//        String[] permissions = {android.Manifest.permission.READ_EXTERNAL_STORAGE,
+//                android.Manifest.permission.WRITE_EXTERNAL_STORAGE,
+//                Manifest.permission.CAMERA};
+//
+//        if(ContextCompat.checkSelfPermission(this.getApplicationContext(),
+//                permissions[0]) == PackageManager.PERMISSION_GRANTED
+//                && ContextCompat.checkSelfPermission(this.getApplicationContext(),
+//                permissions[1]) == PackageManager.PERMISSION_GRANTED
+//                && ContextCompat.checkSelfPermission(this.getApplicationContext(),
+//                permissions[2]) == PackageManager.PERMISSION_GRANTED){
+//
+//        }else{
+//            ActivityCompat.requestPermissions(MainActivity.this,
+//                    permissions,
+//                    REQUEST_CODE);
+//        }
+//    }
+//    @Override
+//    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+//        verifyPermissions();
+//    }
 }

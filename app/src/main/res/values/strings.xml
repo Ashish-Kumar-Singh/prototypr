@@ -1,10 +1,10 @@
 <resources>
-    <string name="app_name">Beta</string>
+    <string name="app_name">Nexum</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
-    <string name="action_settings">Settings</string>
+    <string name="action_settings">Sign Out</string>
     <string name="title_activity_maps">Map</string>
 
     <!-- TODO: Remove or change this placeholder text -->

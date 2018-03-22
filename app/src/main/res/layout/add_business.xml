@@ -69,6 +69,7 @@
                             android:id="@+id/input_description"
                             android:layout_centerVertical="true"
                             android:maxLines="20"
+                            android:layout_marginLeft="10dp"
                             android:background="@null"
                             android:hint="Description"
                             android:textColor="@color/Black"
@@ -95,6 +96,7 @@
                             android:id="@+id/input_price"
                             android:layout_centerVertical="true"
                             android:background="@null"
+                            android:layout_marginLeft="10dp"
                             android:inputType="numberDecimal"
                             android:hint="Business-Type"
                             android:textColor="@color/Black"/>
@@ -165,6 +167,7 @@
                             android:inputType="textCapWords"
                             android:hint="Postal Code"
                             android:textColor="@color/Black"/>
+
 
                     </RelativeLayout>
 

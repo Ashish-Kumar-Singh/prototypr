@@ -103,7 +103,7 @@ public class post extends Fragment implements SelectPhotoDialog.OnPhotoSelectedL
                 Log.d(TAG, "onClick: opening dialog to choose new photo");
                 SelectPhotoDialog dialog = new SelectPhotoDialog();
                 dialog.show(getFragmentManager(), getString(R.string.dialog_select_photo));
-                dialog.setTargetFragment(post.this, 1);
+                dialog.setTargetFragment(post.this,1);
             }
         });
 
